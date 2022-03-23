@@ -1,0 +1,19 @@
+/* --- Run keyhash-gen.py after making changes --- */
+%language=C++
+%struct-type
+%global-table
+%readonly-tables
+%7bit
+%compare-lengths
+%define initializer-suffix ,token::type::IDENT
+%define class-name perfect_hash
+%define lookup-function-name get_token
+
+%{
+#include "token.hpp"
+%}
+struct keyword_hash_entry { const char* name; token::type kind; };
+
+%%
+def, token::type::DEF
+extern, token::type::EXTERN

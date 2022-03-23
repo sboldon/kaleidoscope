@@ -1,13 +1,11 @@
 #include "parser.hpp"
 #include "token.hpp"
+#include <fmt/core.h>
 
-bool Parser::is_error() const {
-  return errors.size() > 0;
-}
-
-void Parser::parse() {
-  Token cur;
+void parser::parse() {
+  token cur;
   do {
     cur = scanner.next_token();
-  } while (cur.kind != Token::Type::TOK_EOF);
+    fmt::print("{:<6} {}\n", module::file_pos(file, cur.loc), cur);
+  } while (cur.kind != token::type::TOK_EOF);
 }

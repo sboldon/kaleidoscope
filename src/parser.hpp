@@ -1,24 +1,18 @@
 #ifndef PARSER_H
 #define PARSER_H
 #include "lexer.hpp"
-#include "srcfile.hpp"
+#include "module.hpp"
 #include "error.hpp"
 #include <vector>
 
-class Parser {
+class parser {
   public:
-    // Parser(SrcFile& file) : file(file), scanner(Lexer(file.contents, file.line_offsets, errors)) {}
-    Parser (SrcFile& file) : file(file), scanner(Lexer(file, errors)) {}
+    parser (module::file& file) : file(file), scanner(lexer(file)) {}
     void parse();
-    bool is_error() const;
-
-
-    std::vector<Error> errors;
 
   private:
-    void temp_method() { std::cout << file.contents[0]; }
-    SrcFile& file;
-    Lexer scanner;
+    module::file& file;
+    lexer<module::file> scanner;
 };
 
 #endif
