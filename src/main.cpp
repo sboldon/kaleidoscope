@@ -1,10 +1,15 @@
 #define DOCTEST_CONFIG_IMPLEMENT
-#include "doctest.h"
+#include "doctest.hpp"
 #include "module.hpp"
+#include "ast.hpp"
+#include "ast_pretty_printer.hpp"
 #include "parser.hpp"
 #include "error.hpp"
 
-// TODO: Command line argument parsing
+#include <fmt/core.h>
+
+
+// TODO: Command line argument parsing.
 int main(int argc, char **argv) {
 #if !defined(DOCTEST_CONFIG_DISABLE)
   doctest::Context ctx;
@@ -16,13 +21,16 @@ int main(int argc, char **argv) {
     return test_result;
   }
 #endif
+
   module::file file(argv[1]);
-  parser parser(file);
+  parsing::parser parser(file);
   parser.parse();
   if (file.has_error()) {
     file.display_errors();
     return EXIT_FAILURE;
   }
-  // TODO: Semantic analysis
+
+  ast::pretty_printer<> pp(*file.abs_syntax, std::ostream_iterator<char>{std::cerr}, &file);
+  pp.traverse_ast();
   return EXIT_SUCCESS;
 }

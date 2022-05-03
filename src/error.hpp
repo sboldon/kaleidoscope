@@ -1,6 +1,8 @@
 #ifndef ERROR_H
 #define ERROR_H
 #include "module.hpp"
+#include "token.hpp"
+
 #include <algorithm>
 #include <iostream>
 #include <cmath>
@@ -16,7 +18,8 @@ bool stderr_has_color();
 struct error_type {
   enum reason {
     unknown_char,
-    invalid_num_lit
+    invalid_num_lit,
+    expected_token,
   };
 
   enum detail {
@@ -29,17 +32,18 @@ struct error_type {
     multiple_radix_points,
     missing_fraction_part,
     missing_exponent,
-    unknown_radix_prefix
+    unknown_radix_prefix,
   };
 
   reason tag;
   union {
     detail info;
     char ch;
+    token::type token;
   };
-
-  bool eq(const error_type& other);
 };
+
+bool operator==(const error_type& lhs, const error_type& rhs);
 
 
 // An error has a msg, a starting line number, a number of lines, and a file_pos. By default, the
@@ -54,10 +58,10 @@ struct error {
   uint32_t line_no = pos.line_no;
   uint32_t num_lines = 1;
 
-  error(error_type kind, module::file_pos pos) : kind(kind), pos(pos) {}
+  error(error_type kind, module::file_pos pos) : kind(std::move(kind)), pos(std::move(pos)) {}
   error(error_type kind, module::file_pos pos, uint32_t line_no, uint32_t num_lines)
-    : kind(kind),
-      pos(pos),
+    : kind(std::move(kind)),
+      pos(std::move(pos)),
       line_no(line_no),
       num_lines(num_lines) {}
 
@@ -101,7 +105,7 @@ template <> struct fmt::formatter<error_type>: formatter<string_view> {
       case unknown_char:
         repr =
           (isprint(kind.ch)
-             ? fmt::format(FMT_COMPILE("unknown character: '{:c}'"), kind.ch)
+             ? fmt::format(FMT_COMPILE("invalid character in current context: '{:c}'"), kind.ch)
              : fmt::format(FMT_COMPILE("unknown byte: '{:#X}'"), kind.ch));
         break;
       case invalid_num_lit:
@@ -110,6 +114,8 @@ template <> struct fmt::formatter<error_type>: formatter<string_view> {
              ? "invalid numeric literal"
              : fmt::format(FMT_COMPILE("invalid numeric literal: {}"), kind.info));
         break;
+      case expected_token:
+        repr = fmt::format(FMT_COMPILE("expected {}"), token::category(kind.token));
     }
     return fmt::formatter<string_view>::format(repr, ctx);
   }

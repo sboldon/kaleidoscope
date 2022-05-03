@@ -37,13 +37,13 @@ static const unsigned char lengthtable[] =
 
 static const struct keyword_hash_entry wordlist[] =
   {
-    {"",token::type::IDENT}, {"",token::type::IDENT},
-    {"",token::type::IDENT},
+    {"",token::type::ident}, {"",token::type::ident},
+    {"",token::type::ident},
 #line 18 "keywords.gperf"
-    {"def", token::type::DEF},
-    {"",token::type::IDENT}, {"",token::type::IDENT},
+    {"def", token::type::keyword_def},
+    {"",token::type::ident}, {"",token::type::ident},
 #line 19 "keywords.gperf"
-    {"extern", token::type::EXTERN}
+    {"extern", token::type::keyword_extern}
   };
 
 const inline token::type 
@@ -62,5 +62,5 @@ perfect_hash::get_token (const char *str, size_t len)
               return wordlist[key].kind;
           }
     }
-  return token::type::IDENT;
+  return token::type::ident;
 }

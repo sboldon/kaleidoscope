@@ -12,11 +12,31 @@ language will be dynamically or statically typed. Additionally, I envision an OC
 system for the language where each file is a module and each module has a signature that defines its
 public interface.
 
-#### Grammar:
+#### Dependencies
+
+* Compiler that supports C++20
+* [fmt](https://github.com/fmtlib/fmt) >= 8.1.1
+* LLVM development libraries (not yet required to build)
+
+#### Grammar (in progress)
+
 ```
+<expression>          ::= <add-expression>
+
+<add-expression>      ::= <multiply-expression> (("+" | "-") <multiply-expression)*
+
+<multiply-expression> ::= <prefix-expression> (("*" | "/") <prefix-expression>)*
+
+<prefix-expression>   ::= ("-" | "!") <primary-expression>
+
+<primary-expression>  ::= <ident>
+                        | <number>
+                        | "(" <expression> ")"
+
 <ident> ::= (<alpha> | "_") (<alpha> | "_" | <dec>)*
 <alpha> ::= "a" .. "z" | "A" .. "Z"
 
+<number>      ::= <int-lit> | <float-lit>
 <float-lit>   ::= <dec-int> "." <dec-int>          [("e" | "E") ["+" | "-"] <dec-int>]
                 | <hex-int> "." <hex> (["_"] hex)* [("p" | "P") ["+" | "-"] <dec-int>]
                 | <dec-int> ("e" | "E") ["+" | "-"] <dec-int>

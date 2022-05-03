@@ -21,14 +21,15 @@ bool stderr_has_color() {
 }
 
 
-bool error_type::eq(const error_type& other) {
-  if (other.tag != tag) {
+bool operator==(const error_type& lhs, const error_type& rhs) {
+  using enum error_type::reason;
+  if (lhs.tag != rhs.tag) {
     return false;
   }
-  switch (other.tag) {
-  case unknown_char: return other.ch == ch;
-  case invalid_num_lit: return other.info == info;
-  default: return false;
+  switch (lhs.tag) {
+    case unknown_char: return lhs.ch == rhs.ch;
+    case invalid_num_lit: return lhs.info == rhs.info;
+    default: return false;
   }
 }
 

@@ -5,7 +5,7 @@
 %readonly-tables
 %7bit
 %compare-lengths
-%define initializer-suffix ,token::type::IDENT
+%define initializer-suffix ,token::type::ident
 %define class-name perfect_hash
 %define lookup-function-name get_token
 
@@ -15,5 +15,5 @@
 struct keyword_hash_entry { const char* name; token::type kind; };
 
 %%
-def, token::type::DEF
-extern, token::type::EXTERN
+def, token::type::keyword_def
+extern, token::type::keyword_extern

@@ -26,7 +26,7 @@ def main():
                                 count=2)
     # Change return values.
     gperf_output = validate_sub(r'&(wordlist\[key\])', r'\1.kind', gperf_output)
-    gperf_output = validate_sub(r'(return\s*)0', r'\1token::type::IDENT', gperf_output)
+    gperf_output = validate_sub(r'(return\s*)0', r'\1token::type::ident', gperf_output)
     with open(OUTPUT, 'w') as f:
         f.write(gperf_output)
     return 0;

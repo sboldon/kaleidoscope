@@ -9,6 +9,7 @@ project(Kaleidoscope)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # C++ string formatting library that is a superset of the formatting library standardized in C++20.
 find_package(fmt)
@@ -23,6 +24,7 @@ find_package(fmt)
 # llvm_map_components_to_libnames(llvm_libs support core irreader) # libc++)
 
 set(SOURCES
+  "${CMAKE_SOURCE_DIR}/src/ast.cpp"
   "${CMAKE_SOURCE_DIR}/src/error.cpp"
   "${CMAKE_SOURCE_DIR}/src/lexer.cpp"
   "${CMAKE_SOURCE_DIR}/src/main.cpp"
@@ -37,6 +39,7 @@ target_compile_definitions(kal PRIVATE $<$<CONFIG:Release>:DOCTEST_CONFIG_DISABL
 target_compile_options(
   kal
   PRIVATE
+  -fno-rtti
   -fvisibility=hidden
   -Werror
   -Wall
